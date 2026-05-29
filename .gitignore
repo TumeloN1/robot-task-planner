@@ -1,15 +1,16 @@
-# Python
+# Python build artifacts (anchored to repo root so they can't shadow a
+# same-named source package, e.g. a future src/rtp/env/ or src/rtp/build/).
 __pycache__/
 *.py[cod]
 *.egg-info/
 .eggs/
-build/
-dist/
+/build/
+/dist/
 
 # Virtual environments
 .venv/
 venv/
-env/
+/env/
 
 # Secrets
 .env
