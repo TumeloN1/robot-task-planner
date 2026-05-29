@@ -18,7 +18,8 @@ env/
 requirements.lock.txt
 
 # Generated artifacts: scenes, episode logs, videos
-data/
+# Anchored to repo root so it does NOT match the src/rtp/data/ package.
+/data/
 *.hdf5
 *.h5
 *.mp4
