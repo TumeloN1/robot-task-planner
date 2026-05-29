@@ -7,7 +7,7 @@ successful is correctly reported as a failure.
 
 from __future__ import annotations
 
-from typing import Callable
+from collections.abc import Callable
 
 from pydantic import BaseModel, Field
 

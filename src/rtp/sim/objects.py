@@ -6,7 +6,10 @@ generator and consumed by `scene_builder` to assemble the MJCF model.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
+
+# Categories that are spawned as static (no free joint) placement targets.
+STATIC_CATEGORIES = {"tray"}
 
 
 @dataclass
@@ -23,6 +26,25 @@ class ObjectSpec:
     def name(self) -> str:
         return f"{self.color} {self.category}"
 
+    @property
+    def is_static(self) -> bool:
+        return self.category in STATIC_CATEGORIES
+
+    def to_dict(self) -> dict:
+        d = asdict(self)
+        d["position"] = list(self.position)
+        return d
+
+    @classmethod
+    def from_dict(cls, data: dict) -> ObjectSpec:
+        return cls(
+            id=data["id"],
+            category=data["category"],
+            color=data["color"],
+            position=tuple(data["position"]),
+            yaw=data.get("yaw", 0.0),
+        )
+
 
 @dataclass
 class SceneSpec:
@@ -32,8 +54,17 @@ class SceneSpec:
     objects: list[ObjectSpec] = field(default_factory=list)
 
     def to_dict(self) -> dict:
-        raise NotImplementedError
+        return {"seed": self.seed, "objects": [o.to_dict() for o in self.objects]}
 
     @classmethod
-    def from_dict(cls, data: dict) -> "SceneSpec":
-        raise NotImplementedError
+    def from_dict(cls, data: dict) -> SceneSpec:
+        return cls(
+            seed=data["seed"],
+            objects=[ObjectSpec.from_dict(o) for o in data.get("objects", [])],
+        )
+
+    def by_id(self, object_id: str) -> ObjectSpec | None:
+        for o in self.objects:
+            if o.id == object_id:
+                return o
+        return None

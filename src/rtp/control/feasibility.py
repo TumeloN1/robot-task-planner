@@ -24,7 +24,9 @@ class FeasibilityResult:
         return self.reachable and self.collision_free
 
 
-def check_pose_feasible(scene, target_pos: np.ndarray, target_quat: np.ndarray) -> FeasibilityResult:
+def check_pose_feasible(
+    scene, target_pos: np.ndarray, target_quat: np.ndarray
+) -> FeasibilityResult:
     """Return whether `grip_site` can reach `target_pos`/`target_quat` collision-free.
 
     TODO:

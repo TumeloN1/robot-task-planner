@@ -15,5 +15,8 @@ def test_validation_result_repair_text_is_concise():
 
 
 def test_plan_roundtrip():
-    plan = Plan(rationale="initial", tool_calls=[ToolCall(tool="find_object", args={"query": "red mug"})])
+    plan = Plan(
+        rationale="initial",
+        tool_calls=[ToolCall(tool="find_object", args={"query": "red mug"})],
+    )
     assert plan.tool_calls[0].tool == "find_object"
