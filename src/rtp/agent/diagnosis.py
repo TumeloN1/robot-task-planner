@@ -2,8 +2,8 @@
 
 Emits a ruthlessly compact `FailureContext` (never raw state dumps): what was
 attempted, the one-line observed result, and a directive `must_change`. It also
-carries a bounded summary of prior attempts to avoid context bloat / attention
-dilution that causes the model to loop.
+carries a bounded count of prior attempts to avoid context bloat that causes the
+model to loop.
 """
 
 from __future__ import annotations
@@ -19,27 +19,63 @@ class FailureType(str, Enum):
     WRONG_OBJECT = "wrong_object"
     UNREACHABLE = "unreachable"
     NOT_VISIBLE = "not_visible"
+    GOAL_NOT_MET = "goal_not_met"
     TIMEOUT = "timeout"
+
+
+_DIRECTIVES = {
+    FailureType.GRASP_FAILED: "The grasp did not secure the object. Re-approach and grasp "
+                              "again, or target a different graspable object; do not repeat "
+                              "the identical sequence.",
+    FailureType.OBJECT_SLIPPED: "The object slipped during transport. Re-grasp it before "
+                                "moving, and verify the grasp with check_grasp_success.",
+    FailureType.UNREACHABLE: "The pose was unreachable. Re-find the object or choose a "
+                             "different target.",
+    FailureType.NOT_VISIBLE: "The object was not visible. Call look_around or find_object "
+                             "before acting on it.",
+    FailureType.TARGET_BLOCKED: "The target location is blocked. Clear it or choose another "
+                                "placement.",
+    FailureType.WRONG_OBJECT: "A different object than intended was handled. Re-find the "
+                              "correct object by its description.",
+    FailureType.GOAL_NOT_MET: "The goal relation was not satisfied. Reconsider placement and "
+                              "redo the relevant steps.",
+}
 
 
 @dataclass
 class FailureContext:
     failure_type: FailureType
-    attempted: str  # e.g. "grasp(red mug) at top-down pose"
-    result: str  # one line, e.g. "object not held after settle window"
-    must_change: str  # directive, e.g. "change approach coords; do not repeat pose"
+    attempted: str
+    result: str
     prior_attempts: int = 0
 
+    @property
+    def must_change(self) -> str:
+        return _DIRECTIVES.get(self.failure_type, "Change your approach; do not repeat the "
+                               "previous failed steps.")
+
     def render(self) -> str:
-        """Compact text block for the replan prompt."""
-        raise NotImplementedError
+        return (
+            f"- Attempted: {self.attempted}\n"
+            f"- Result: {self.result}\n"
+            f"- Prior failed attempts this episode: {self.prior_attempts}\n"
+            f"- You MUST change: {self.must_change}"
+        )
 
 
-def classify(step_result, scene) -> FailureType:
-    """Map a failed primitive/check result + scene to a FailureType."""
-    raise NotImplementedError
-
-
-def rule_based_recovery(failure: FailureContext):
-    """Return a cheap deterministic recovery action, or None to defer to the LLM."""
-    raise NotImplementedError
+def classify(tool: str, result) -> FailureType:
+    """Map a failed primitive/check result to a FailureType."""
+    msg = (result.message or "").lower()
+    if result.info.get("slipped"):
+        return FailureType.OBJECT_SLIPPED
+    if tool == "grasp":
+        return FailureType.GRASP_FAILED
+    if "not visible" in msg:
+        return FailureType.NOT_VISIBLE
+    if "unreachable" in msg or "infeasible" in msg:
+        return FailureType.UNREACHABLE
+    if tool == "check_grasp_success":
+        return FailureType.OBJECT_SLIPPED
+    if tool == "check_task_success":
+        return FailureType.GOAL_NOT_MET
+    return FailureType.TIMEOUT

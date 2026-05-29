@@ -8,6 +8,9 @@ from __future__ import annotations
 
 import os
 import platform
+from pathlib import Path
+
+_ROOT = Path(__file__).resolve().parent.parent
 
 
 def setup_env() -> None:
@@ -16,6 +19,15 @@ def setup_env() -> None:
     try:
         from dotenv import load_dotenv
 
-        load_dotenv()
+        load_dotenv(dotenv_path=_ROOT / ".env")
     except ImportError:
         pass
+
+
+def planner_kwargs() -> dict:
+    """Build GeminiPlanner kwargs from configs/planner.yaml."""
+    import yaml
+
+    cfg = yaml.safe_load((_ROOT / "configs" / "planner.yaml").read_text())
+    keys = ("model", "temperature", "max_parse_repairs", "request_timeout_ms")
+    return {k: cfg[k] for k in keys if k in cfg}

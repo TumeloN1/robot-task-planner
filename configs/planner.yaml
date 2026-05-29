@@ -1,11 +1,14 @@
-# Gemini planner settings.
-model: "gemini-2.5-flash"
+# Planner LLM settings (Google Gemini API; also serves Gemma open models).
+model: "gemma-4-31b-it"
 temperature: 0.2
 max_output_tokens: 2048
+request_timeout_ms: 30000
 
-# Structured output: prefer response_json_schema (maintainer-recommended path);
-# fall back to response_schema (Pydantic) if false.
-use_json_schema: true
+# Output mode. Gemma models do NOT support response_json_schema (it returns
+# 504 DEADLINE_EXCEEDED), so we use JSON mime mode and describe the shape in the
+# prompt, then parse robustly. Gemini models support schema mode too, but JSON
+# mime + parsing is portable across both.
+json_mime: true
 
 # Robust-parse / repair behavior.
 max_parse_repairs: 1
