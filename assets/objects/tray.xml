@@ -1,0 +1,11 @@
+<!-- Object snippet: a static tray (placement target). Fixed to the world: no
+     free joint, so it does not move when objects are placed on it. -->
+<mujocoinclude>
+  <body name="{name}" pos="{pos}">
+    <geom type="box" size="0.09 0.09 0.005" rgba="{rgba}" mass="0.5"/>
+    <geom type="box" size="0.09 0.005 0.02" pos="0 0.085 0.02" rgba="{rgba}"/>
+    <geom type="box" size="0.09 0.005 0.02" pos="0 -0.085 0.02" rgba="{rgba}"/>
+    <geom type="box" size="0.005 0.09 0.02" pos="0.085 0 0.02" rgba="{rgba}"/>
+    <geom type="box" size="0.005 0.09 0.02" pos="-0.085 0 0.02" rgba="{rgba}"/>
+  </body>
+</mujocoinclude>

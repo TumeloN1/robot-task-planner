@@ -1,0 +1,9 @@
+<!-- Object snippet: a simple mug approximated as a short cylinder. Refine to a
+     thin-walled mesh later if needed for realistic grasping. -->
+<mujocoinclude>
+  <body name="{name}" pos="{pos}">
+    <freejoint/>
+    <geom type="cylinder" size="0.03 0.045" rgba="{rgba}" mass="0.12"
+          friction="1.0 0.05 0.001"/>
+  </body>
+</mujocoinclude>

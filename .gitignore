@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Secrets
+.env
+
+# Locked deps (regenerate locally)
+requirements.lock.txt
+
+# Generated artifacts: scenes, episode logs, videos
+data/
+*.hdf5
+*.h5
+*.mp4
+*.pkl
+
+# Vendored MuJoCo Menagerie assets (downloaded via scripts, not committed)
+assets/menagerie/franka_emika_panda/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# Tooling caches
+.pytest_cache/
+.ruff_cache/

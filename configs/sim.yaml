@@ -1,0 +1,26 @@
+# MuJoCo simulation settings.
+timestep: 0.002          # physics step (s)
+control_hz: 50           # control loop rate (Hz)
+gravity: [0.0, 0.0, -9.81]
+
+viewer:
+  enabled: true
+  width: 1280
+  height: 720
+
+# Camera used for perception occlusion checks (mj_ray) and rendering.
+camera:
+  name: "scene_cam"
+
+# Tabletop workspace envelope (meters, world frame). Used by the validator's
+# fast physics-sanity check to reject targets outside the reachable region or
+# below the table surface.
+workspace:
+  x: [0.25, 0.75]
+  y: [-0.35, 0.35]
+  z: [0.40, 0.90]
+  table_surface_z: 0.40
+
+# Settle window for temporal postcondition checkers.
+settle:
+  seconds: 0.5

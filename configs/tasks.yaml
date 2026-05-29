@@ -1,0 +1,27 @@
+# Instruction templates and their programmatic success predicates.
+# {color}, {object}, {target}, {a}, {b} are filled by tasks/generator.py.
+# The predicate is evaluated deterministically by tasks/predicates.py - never
+# by the LLM.
+
+templates:
+  - id: place_on
+    instruction: "Put the {color} {object} on the {target}"
+    predicate: { relation: "on", subject: "{color} {object}", target: "{target}" }
+
+  - id: move_near
+    instruction: "Move the {object} near the {target}"
+    predicate: { relation: "near", subject: "{object}", target: "{target}", threshold_m: 0.12 }
+
+  - id: stack
+    instruction: "Stack the {a} on the {b}"
+    predicate: { relation: "on", subject: "{a}", target: "{b}" }
+
+  - id: place_left
+    instruction: "Place the {object} to the left of the {target}"
+    predicate: { relation: "left_of", subject: "{object}", target: "{target}" }
+
+# Vocabulary the generator draws from.
+vocabulary:
+  colors: ["red", "green", "blue", "yellow"]
+  objects: ["mug", "block"]
+  targets: ["tray"]

@@ -1,0 +1,21 @@
+# Episode / evaluation run settings.
+seed: 0
+num_scenes: 50
+max_steps_per_episode: 30
+
+# Procedural scene generation.
+scene:
+  num_objects: [2, 5]      # inclusive range
+  collision_margin_m: 0.03
+
+# Failure injection rates (the self-correction probe). 0.0 disables an injector.
+failure_injection:
+  grasp_slip: 0.15         # force-release object mid-transport
+  perception_confusion: 0.10   # swap ids of two similar objects
+  target_blocked: 0.10     # spawn obstacle on the place pose
+  actuation_noise: 0.10    # noisy controller targets -> near-miss grasps
+
+# Episode logging.
+logging:
+  out_dir: "data/episodes"
+  record_video: false

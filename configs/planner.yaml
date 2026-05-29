@@ -1,0 +1,16 @@
+# Gemini planner settings.
+model: "gemini-2.5-flash"
+temperature: 0.2
+max_output_tokens: 2048
+
+# Structured output: prefer response_json_schema (maintainer-recommended path);
+# fall back to response_schema (Pydantic) if false.
+use_json_schema: true
+
+# Robust-parse / repair behavior.
+max_parse_repairs: 1
+
+# Replanning controls (anti-loop).
+max_replans: 3
+require_rationale: true
+loop_detection: true        # validator rejects near-identical failed replans

@@ -1,0 +1,29 @@
+<!-- Base tabletop scene: floor, light, table, perception camera, and the Panda.
+
+     The Panda <include> is intentionally commented out until the model is
+     fetched (scripts/fetch_assets.py downloads it to
+     assets/menagerie/franka_emika_panda/). scene_builder.py is responsible for
+     enabling the include and injecting object bodies from assets/objects/. -->
+<mujoco model="rtp_scene_base">
+  <option integrator="implicitfast"/>
+  <compiler angle="radian"/>
+
+  <!-- <include file="menagerie/franka_emika_panda/panda.xml"/> -->
+
+  <visual>
+    <global offwidth="1280" offheight="720"/>
+  </visual>
+
+  <worldbody>
+    <light name="top" pos="0.5 0 1.5" dir="0 0 -1" diffuse="0.8 0.8 0.8"/>
+    <geom name="floor" type="plane" size="2 2 0.1" rgba="0.8 0.8 0.8 1"/>
+
+    <!-- Table: top surface at z = table_surface_z (see configs/sim.yaml). -->
+    <body name="table" pos="0.5 0 0.2">
+      <geom name="table_top" type="box" size="0.35 0.45 0.2" rgba="0.6 0.45 0.3 1"/>
+    </body>
+
+    <!-- Camera used for perception occlusion (mj_ray) and rendering. -->
+    <camera name="scene_cam" pos="0.5 -0.9 0.9" xyaxes="1 0 0 0 0.5 0.8"/>
+  </worldbody>
+</mujoco>

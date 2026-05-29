@@ -1,0 +1,9 @@
+<!-- Object snippet: a small graspable cube. The scene_builder injects this body
+     into the scene, sets {name}/{pos}/{rgba}, and adds a free joint. -->
+<mujocoinclude>
+  <body name="{name}" pos="{pos}">
+    <freejoint/>
+    <geom type="box" size="0.02 0.02 0.02" rgba="{rgba}" mass="0.05"
+          friction="1.0 0.05 0.001"/>
+  </body>
+</mujocoinclude>
