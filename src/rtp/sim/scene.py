@@ -9,6 +9,7 @@ cloned `mjData` without touching the live simulation.
 from __future__ import annotations
 
 import copy
+from collections.abc import Callable
 
 import mujoco
 import numpy as np
@@ -44,6 +45,7 @@ class MuJoCoScene:
             self.model.opt.timestep = timestep
         self.data = mujoco.MjData(self.model)
         self._renderer: mujoco.Renderer | None = None
+        self._step_observers: list[Callable[[MuJoCoScene], None]] = []
         self.reset()
 
     @classmethod
@@ -91,6 +93,16 @@ class MuJoCoScene:
     def step(self, n: int = 1) -> None:
         for _ in range(n):
             mujoco.mj_step(self.model, self.data)
+            for observer in self._step_observers:
+                observer(self)
+
+    def add_step_observer(self, observer: Callable[[MuJoCoScene], None]) -> None:
+        """Call `observer(scene)` after each physics step."""
+        self._step_observers.append(observer)
+
+    def remove_step_observer(self, observer: Callable[[MuJoCoScene], None]) -> None:
+        """Remove a previously-registered step observer."""
+        self._step_observers.remove(observer)
 
     def clone_data(self) -> mujoco.MjData:
         """Deep copy of mjData for off-line feasibility checks."""

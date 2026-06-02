@@ -62,7 +62,7 @@ class EpisodeRecorder:
     def close(self) -> None:
         self._file.close()
 
-    def __enter__(self) -> "EpisodeRecorder":
+    def __enter__(self) -> EpisodeRecorder:
         return self
 
     def __exit__(self, *exc) -> None:

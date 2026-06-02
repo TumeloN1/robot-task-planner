@@ -82,6 +82,8 @@ def assemble_spec(
         )
 
     spec = mujoco.MjSpec.from_file(str(panda_xml))
+    spec.visual.global_.offwidth = 1280
+    spec.visual.global_.offheight = 720
 
     # End-effector site at the TCP between the fingers.
     spec.body("hand").add_site(name=GRIP_SITE_NAME, pos=list(GRIP_SITE_POS),
